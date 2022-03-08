@@ -1,25 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <HelloWorld :name="name" @pressed="pressed" />
+  <div v-if="pokemon">
+    <img :src="pokemon.sprites.back_default" alt="" />
+  </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from './components/HelloWorld.vue';
+<script lang="ts" setup>
+//this import is highlighted in red and I don't know why, it works though
+  import HelloWorld from "./components/HelloWorld.vue";
+  import { ref } from "vue";
+  let name = "Diogo";
+  let pokemon = ref(null) as any;
 
-@Options({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+  async function pressed() {
+    const info = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+    const json = await info.json();
+    pokemon.value = json;
+    console.log(pokemon.value);
+  }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
